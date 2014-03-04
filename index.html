@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-.subunit.CHH { fill: #ddc; }
-.subunit.CHI { fill: #cdd; }
-.subunit.HKG { fill: #cdc; }
-.subunit.PFA { fill: #dcd; }
+/*.subunit.Guangdong { fill: #ddc; }*/
+/*.subunit.Guangdong { fill: #cdd; }*/
+/*.subunit.Guangdong { fill: #cdc; }*/
+.subunit.Guangdong { fill: #dcd; }
 .subunit.TWN { fill: #ccd; }
 
 .place,
@@ -33,13 +33,13 @@ text {
 <script src="libs/topojson.v1.min.js"></script>
 <script>
   var width = 960,
-      height = 1160;
+      height = 700;
 
   var projection = d3.geo.albers()
-      .center([110.00, 25.00])
-      .rotate([0, 60, 30])
+      .center([122.00, 15.00])
+      .rotate([0, 65, 30])
       .parallels([25, 47])
-      .scale(800)
+      .scale(5500)
       .translate([width / 2, height / 2]);
 
   var path = d3.geo.path()
@@ -49,23 +49,24 @@ text {
       .attr('width', width)
       .attr('height', height);
 
-  d3.json('datas/cn.json', function(error, cn) {
+  d3.json('datas/gd.json', function(error, gd) {
     svg.selectAll('.subunit')
-        .data(topojson.feature(cn, cn.objects.subunits).features)
+        .data(topojson.feature(gd, gd.objects.subunits).features)
         .enter()
         .append('path')
         .attr('class', function(d) {
-          return 'subunit ' + d.id;
+          console.log('d', d)
+          return 'subunit ' + d.properties.name;
         })
         .attr('d', path);
 
     svg.append('path')
-        .datum(topojson.feature(cn, cn.objects.places))
+        .datum(topojson.feature(gd, gd.objects.places))
         .attr('d', path)
         .attr('class', 'place');
 
     svg.selectAll(".place-label")
-        .data(topojson.feature(cn, cn.objects.places).features)
+        .data(topojson.feature(gd, gd.objects.places).features)
         .enter().append("text")
         .attr("class", "place-label")
         .attr("transform", function(d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
@@ -75,7 +76,7 @@ text {
         .text(function(d) { return d.properties.name; });
 
     svg.selectAll(".subunit-label")
-        .data(topojson.feature(cn, cn.objects.subunits).features)
+        .data(topojson.feature(gd, gd.objects.subunits).features)
         .enter().append("text")
         .attr("class", function(d) { return "subunit-label " + d.id; })
         .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
